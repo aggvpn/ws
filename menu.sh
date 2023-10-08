@@ -39,6 +39,36 @@ username=$(cat /usr/bin/user)
 oid=$(cat /usr/bin/ver)
 exp=$(cat /usr/bin/e)
 clear
+# CEK UPDATE
+Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[41;37m" && Font_color_suffix="\033[0m"
+Info1="${Green_font_prefix}($version)${Font_color_suffix}"
+Info2="${Green_font_prefix}(LATEST VERSION)${Font_color_suffix}"
+Error="Version ${Green_font_prefix}[$ver]${Font_color_suffix} available${Red_font_prefix}[Please Update]${Font_color_suffix}"
+version=$(cat /home/ver)
+new_version=$( curl https://raw.githubusercontent.com/${GitUser}/version/main/version.conf | grep $version )
+#Status Version
+if [ $version = $new_version ]; then
+stl="${Info2}"
+else
+stl="${Error}"
+fi
+clear
+# Getting CPU Information
+cpu_usage1="$(ps aux | awk 'BEGIN {sum=0} {sum+=$3}; END {print sum}')"
+cpu_usage="$((${cpu_usage1/\.*/} / ${corediilik:-1}))"
+cpu_usage+=" %"
+#Download/Upload today
+dtoday="$(vnstat -i eth0 | grep "today" | awk '{print $2" "substr ($3, 1, 1)}')"
+utoday="$(vnstat -i eth0 | grep "today" | awk '{print $5" "substr ($6, 1, 1)}')"
+ttoday="$(vnstat -i eth0 | grep "today" | awk '{print $8" "substr ($9, 1, 1)}')"
+#Download/Upload yesterday
+dyest="$(vnstat -i eth0 | grep "yesterday" | awk '{print $2" "substr ($3, 1, 1)}')"
+uyest="$(vnstat -i eth0 | grep "yesterday" | awk '{print $5" "substr ($6, 1, 1)}')"
+tyest="$(vnstat -i eth0 | grep "yesterday" | awk '{print $8" "substr ($9, 1, 1)}')"
+#Download/Upload current month
+dmon="$(vnstat -i eth0 -m | grep "$(date +"%b '%y")" | awk '{print $3" "substr ($4, 1, 1)}')"
+umon="$(vnstat -i eth0 -m | grep "$(date +"%b '%y")" | awk '{print $6" "substr ($7, 1, 1)}')"
+tmon="$(vnstat -i eth0 -m | grep "$(date +"%b '%y")" | awk '{print $9" "substr ($10, 1, 1)}')"
 
 # STATUS EXPIRED ACTIVE
 Green_font_prefix="\033[32m" && Red_font_prefix="\033[31m" && Green_background_prefix="\033[42;37m" && Red_background_prefix="\033[4$below" && Font_color_suffix="\033[0m"
@@ -58,6 +88,18 @@ clear
 d1=$(date -d "$valid" +%s)
 d2=$(date -d "$today" +%s)
 certifacate=$(( (d1 - d2) / 86400 ))
+# TOTAL ACC CREATE VMESS WS
+vmess=$(grep -c -E "^#vms " "/usr/local/etc/xray/vmess.json")
+# TOTAL ACC CREATE  VLESS WS
+vless=$(grep -c -E "^#vls " "/usr/local/etc/xray/vless.json")
+# TOTAL ACC CREATE  VLESS TCP XTLS
+xtls=$(grep -c -E "^#vxtls " "/usr/local/etc/xray/config.json")
+# TOTAL ACC CREATE  TROJAN
+trtls=$(grep -c -E "^#trx " "/usr/local/etc/xray/tcp.json")
+# TOTAL ACC CREATE  TROJAN WS TLS
+trws=$(grep -c -E "^#trws " "/usr/local/etc/xray/trojan.json")
+# TOTAL ACC CREATE OVPN SSH
+total_ssh="$(awk -F: '$3 >= 1000 && $1 != "nobody" {print $1}' /etc/passwd | wc -l)"
 # PROVIDED
 creditt=$(cat /root/provided)
 # BANNER COLOUR
@@ -102,7 +144,7 @@ echo -e "  \e[$text Certificate Status   : Expired in $certifacate days"
 echo -e "  \e[$text Provided By          : $creditt"
 echo -e " \e[$line╒════════════════════════════════════════════════════════════╕\e[m"
 echo -e "  \e[$text Traffic\e[0m       \e[${text}Today      Yesterday        Month   "
-echo -e "  \e[$text Download\e[0m   \e[${text}   $freq MHz    $dyest       $dmon   \e[0m"
+echo -e "  \e[$text Download\e[0m   \e[${text}   $dtoday    $dyest       $dmon   \e[0m"
 echo -e "  \e[$text Upload\e[0m     \e[${text}   $utoday    $uyest       $umon   \e[0m"
 echo -e "  \e[$text Total\e[0m       \e[${text}  $ttoday    $tyest       $tmon  \e[0m "
 echo -e " \e[$line╘════════════════════════════════════════════════════════════╛\e[m"
