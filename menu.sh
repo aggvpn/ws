@@ -91,13 +91,13 @@ certifacate=$(( (d1 - d2) / 86400 ))
 # TOTAL ACC CREATE VMESS WS
 vmess=$(grep -c -E "^#vms " "/usr/local/etc/xray/vmess.json")
 # TOTAL ACC CREATE  VLESS WS
-vless=$(grep -c -E "^#vls " "/usr/local/etc/xray/vless.json")
+vlessws=$(grep -c -E "^#vls " "/usr/local/bin/xray")
 # TOTAL ACC CREATE  VLESS TCP XTLS
 xtls=$(grep -c -E "^#vxtls " "/usr/local/etc/xray/config.json")
 # TOTAL ACC CREATE  TROJAN
 trtls=$(grep -c -E "^#trx " "/usr/local/etc/xray/tcp.json")
 # TOTAL ACC CREATE  TROJAN WS TLS
-trws=$(grep -c -E "^#trws " "/usr/local/etc/xray/trojan.json")
+trjws=$(grep -c -E "^#trws " "/usr/local/etc/xray/trojan.json")
 # TOTAL ACC CREATE OVPN SSH
 total_ssh="$(awk -F: '$3 >= 1000 && $1 != "nobody" {print $1}' /etc/passwd | wc -l)"
 # PROVIDED
@@ -149,7 +149,7 @@ echo -e "  \e[$text Upload\e[0m     \e[${text}   $utoday    $uyest       $umon  
 echo -e "  \e[$text Total\e[0m       \e[${text}  $ttoday    $tyest       $tmon  \e[0m "
 echo -e " \e[$line╘════════════════════════════════════════════════════════════╛\e[m"
 echo -e " \e[$text Ssh/Ovpn   V2ray   Vless   Vlessxtls   Trojan-Ws   Trojan-Tls \e[0m "    
-echo -e " \e[$below    $total_ssh         $vmess       $vless        $xtls           $trws           $trtls \e[0m "
+echo -e " \e[$below    $total_ssh         $vmess       $vlessws        $xtls           $trjws           $trtls \e[0m "
 echo -e   " \e[$line════════════════════════════════════════════════════════════\e[m"
 echo -e   " \e[$back_text                        \e[30m[\e[$box MAIN MENU\e[30m ]\e[1m                       \e[m"
 echo -e   " \e[$line════════════════════════════════════════════════════════════\e[m"
